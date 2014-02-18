@@ -1,0 +1,19 @@
+{
+  "name": "islider",
+  "description": "islider",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "author": {
+    "name": "terry xu",
+    "email": "terry.xu@me.com",
+    "url": "https://github.com/xzf158"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/danheberden/gith/blob/master/LICENSE-MIT"
+    }
+  ]
+}

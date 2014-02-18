@@ -1,0 +1,72 @@
+body,html{
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+#pic-islider{
+    width: 100%;
+    height: 100%;
+    background: #dedede;
+    position: relative;
+    overflow: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+#pic-islider img{
+    width: 100%;
+}
+
+#prev{
+    position: absolute;
+    top:44%;
+    left: 0px;
+    width: 50px;
+    height: 100px;
+    background: #ff0000;
+    z-index: 9;
+    line-height: 100px;
+    font-size: 40px;
+    color: #ffffff;
+    text-align: center;
+    cursor: pointer;
+}
+
+#next{
+    position: absolute;
+    top:44%;
+    right: 0px;
+    width: 50px;
+    height: 100px;
+    background: #ff0000;
+    z-index: 9;
+    line-height: 100px;
+    font-size: 40px;
+    color: #ffffff;
+    text-align: center;
+    cursor: pointer;
+}
+
+#pic-islider .isilder-indicators{
+    position: absolute;
+    bottom: 20px;
+    width: 200px;
+    margin-left: -100px;
+    left: 50%;
+    z-index: 9;
+}
+
+#pic-islider .isilder-indicators li{
+    margin-left: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background: #000000;
+    list-style: none;
+    float: left;
+    cursor: pointer;
+}
+
+#pic-islider .isilder-indicators li.active{
+    background: #ff0000;    
+}

@@ -5,6 +5,10 @@
 !function($) {
     "use strict";
 
+    var ua = window.navigator.userAgent.toLowerCase(),
+        isAndroid = ua.match(/android/i) !== null,
+        touchEndMaxDuration = isAndroid ? .4 : .25;
+
     if($ === undefined){
         throw "need jQuery or Zepto";
         return;
@@ -175,7 +179,8 @@
                 isScroll = false;
                 lastDistanse = touch.pageX - scope.startX;
                 scope.cp += lastDistanse;
-                scope.container.css("left", scope.cp / liW * 100 + "%");
+                // scope.container.css("left", scope.cp / liW * 100 + "%");
+                scope.container.css("left", scope.cp);
                 scope.startX = touch.pageX;
                 scope.startY = touch.pageY;
                 return false;
@@ -188,8 +193,9 @@
                     return;
                 }
                 if (e) {
+
                     var i = Math.abs(scope.cp / liW);
-                    i = i > .25 ? .25 : i;
+                    i = i > touchEndMaxDuration ? touchEndMaxDuration : i;
                     i = i < .1 ? .1 : i;
                     var index = - scope.cp / liW;//(liW + scope.options.itemMargin);
                     if (Math.abs(index) > .15) {
@@ -311,6 +317,8 @@
             timeId, 
             duration = (t != undefined ? t : this.options.duration) * 1000;
 
+        // alert(duration+ " " + easing);
+        // duration = 600;
         if (duration == 0) {
             this.container.css("left", leftValue);
             scope.end();

@@ -53,7 +53,7 @@
                 padding: 0
             });
 
-            this._items = this.container.children('li');
+            this._items = this.container.children(this.options.children);
             this._items.each(function(i) {
                 var $this = $(this);
                 $this.data("index", i);
@@ -103,24 +103,24 @@
                 if (this.options.indicators === $.fn.islider.defaults.indicators) {
                     this._ins = this.$e.children(this.options.indicators);
                 } else {
-                    this._ins = $(this.options.indicators);
+                    this._ins = $(this.options.indicators).each(function(i) {
+                        $(this).data("index", i);
+                    });
                 }
-                this._indItems = this._ins.on("click touchstart seek", "li", function(e) {
+                this._indItems = this._ins.on("click touchstart seek", function(e) {
                     if(scope.animating) return;
                     var $this = $(this);
                     if (e) {
                         sliderInst.seekTo($this.data("index"));
                     }
-                    scope._ins.find(".active").removeClass('active');
+                    scope._ins.removeClass('active');
                     $this.addClass('active');
                     return false;
-                }).children("li").each(function(i) {
-                    $(this).data("index", i);
                 });
                 this._indItems.eq(this.currentIndex).trigger('click');
             }
             var hasTouch = ("ontouchstart" in window);
-            if (this._itemLen > 2 && hasTouch && this.options.touch) {
+            if (this._itemLen > 1 && hasTouch && this.options.touch) {
                 this.$e.on("touchstart", function(e) {
                     scope._touchStart(e.originalEvent ? e.originalEvent : e);
                 });
@@ -129,22 +129,37 @@
         _sortItem: function() {
             var _startIndex = this.currentIndex;
             var css = {};
-            // if(this._itemLen <= 2){
-            //     return;
-            // }
             for (var i = 0, il = this._itemLen; i < il; i++) {
-                if (i !== this._itemLen - 1) {
-                    this._items.eq(_startIndex % this._itemLen).css({
-                        left: i * 100 + "%"
-                    });
-                } else {
-                    this._items.eq(_startIndex % this._itemLen).css({
-                        left: -100 + "%"
-                    });
+                if(il <= 2){
+                    if(this.currentIndex == 0){
+                        this._items.eq(i).css({
+                            left: i * 100 + "%"
+                        });
+                    }else{
+                        this._items.eq(i).css({
+                            left: (i-1) * 100 + "%"
+                        });
+                    }
+                }else{
+                    if (i !== this._itemLen - 1) {
+                        this._items.eq(_startIndex % this._itemLen).css({
+                            left: i * 100 + "%"
+                        });
+                    } else {
+                        this._items.eq(_startIndex % this._itemLen).css({
+                            left: -100 + "%"
+                        });
+                    }
                 }
                 _startIndex++;
             }
             this.container.css("left", 0);
+            // if(this._itemLen <= 2){
+            //     this._sortItem = function (){
+            //         // console.log("============1");
+            //     };
+            //     console.log("============",this._sortItem );
+            // }
         },
         _normalSort: function(index) {
             var css = {};
@@ -158,6 +173,7 @@
             this.container.css(css);
         },
         _touchStart: function(e) {
+            if(this.animating) return;
             this.startX = e.touches[0].pageX;
             this.startY = e.touches[0].pageY;
             this.$e.on("touchmove", onTouchMove);
@@ -166,7 +182,7 @@
             var isScroll = true,
                 liW = this.container.width(),
                 boundW = this.options.bound ? liW * 0.25 : 0,
-                lastDistanse, scope = this;
+                lastDistanse, scope = this, timeid;
             function onTouchMove(e) {
                 var touch = e.originalEvent ? e.originalEvent.touches[0]:e.touches[0];
                 if (isScroll && Math.abs(touch.pageY - scope.startY) > 5) {
@@ -179,8 +195,18 @@
                 isScroll = false;
                 lastDistanse = touch.pageX - scope.startX;
                 scope.cp += lastDistanse;
-                // scope.container.css("left", scope.cp / liW * 100 + "%");
-                scope.container.css("left", scope.cp);
+                if(scope._itemLen <= 2){
+                    var springW = liW *.14;
+                    if(scope.currentIndex == 0){
+                        scope.cp =  scope.cp > springW ? springW : scope.cp;
+                        scope.container.css("left", scope.cp);
+                    }else{
+                        scope.cp = scope.cp < -springW ? -springW : scope.cp;
+                        scope.container.css("left", scope.cp);
+                    }
+                }else{
+                    scope.container.css("left", scope.cp);
+                }
                 scope.startX = touch.pageX;
                 scope.startY = touch.pageY;
                 return false;
@@ -193,7 +219,6 @@
                     return;
                 }
                 if (e) {
-
                     var i = Math.abs(scope.cp / liW);
                     i = i > touchEndMaxDuration ? touchEndMaxDuration : i;
                     i = i < .1 ? .1 : i;
@@ -272,7 +297,6 @@
                     this.direction = "prev";
                 }
             }
-
             this.currentIndex = index;
             this.start();
             $.fn.islider.animate.apply(this, [_seek * this.container.width(), t != undefined ? t : this.options.duration, easing ? easing : this.options.easing]);
@@ -307,7 +331,8 @@
         start: undefined,
         ended: undefined,
         container: ".islider-container",
-        indicators: ".islider-indicators",
+        children: "li",
+        indicators: ".islider-indicators li",
         prevBtn: ".prev-btn",
         nextBtn: ".next-btn"
     };

@@ -25,7 +25,7 @@ $(function(){
         start: undefined,
         ended: undefined,
         container: ".isilder-container",
-        indicators: ".isilder-indicators",
+        indicators: ".isilder-indicators li",
         prevBtn: ".prev-btn",
         nextBtn: ".next-btn"
     },function(){

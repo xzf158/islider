@@ -1,8 +1,8 @@
-$(function(){
+$(function() {
     // move.select = function(selector){
     //     return selector[0];
     // };
-    //自定义animate
+    //custome sanimate
     // $.fn.islider.animate = function(leftValue, t,  easing) {
     //     var scope = this;
     //     scope.container.css("transition", "");
@@ -28,8 +28,8 @@ $(function(){
         indicators: ".isilder-indicators li",
         prevBtn: ".prev-btn",
         nextBtn: ".next-btn"
-    },function(){
+    }, function() {
         picIslider = this;
     });
-    picIslider.seekTo(2, 0.00001);
+    picIslider.seekTo(2, 0);
 });

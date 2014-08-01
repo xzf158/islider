@@ -60,3 +60,5 @@ $.fn.islider.animate = function(leftValue, t,  easing) {
 - next(t, easing)
 	- t: animate time, 0 will has no animate.
 	- easing: easing, need to pay attention to what animate function you used.
+	
+####Author Blog: <http://blog.xzf.me>

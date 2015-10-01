@@ -1,3 +1,9 @@
+* {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 body,html{
     margin: 0px;
     width: 100%;
@@ -15,6 +21,7 @@ body,html{
 
 #pic-islider img{
     width: 100%;
+    pointer-events: none;
 }
 
 #prev{
@@ -47,7 +54,7 @@ body,html{
     cursor: pointer;
 }
 
-#pic-islider .isilder-indicators{
+#pic-islider .isilider-indicators{
     position: absolute;
     bottom: 20px;
     width: 200px;
@@ -56,7 +63,7 @@ body,html{
     z-index: 9;
 }
 
-#pic-islider .isilder-indicators li{
+#pic-islider .isilider-indicators li{
     margin-left: 5px;
     width: 20px;
     height: 20px;
@@ -67,6 +74,6 @@ body,html{
     cursor: pointer;
 }
 
-#pic-islider .isilder-indicators li.active{
+#pic-islider .isilider-indicators li.active{
     background: #ff0000;    
 }

@@ -1,7 +1,7 @@
 /**
  * @author Terry
  * @date 2013/8/29
- * @modified 2015/9/14
+ * @modified 2015/10/01
  */
 ! function($) {
 	"use strict";
@@ -40,6 +40,14 @@
 		this.$e = $(element);
 		this.options = options;
 		this.currentIndex = this.options.currentIndex;
+		if (window.jQuery && this.options.easing) {
+			if (!jQuery.easing[this.options.easing]) {
+				if (window.console && window.console.warn) {
+					console.warn("Not support easing: " + this.options.easing);
+				}
+				delete this.options.easing;
+			}
+		}
 		this._prevIndex = this.currentIndex;
 		this._initDom();
 	};
@@ -236,6 +244,8 @@
 				boundW = this.options.bound ? liW * 0.25 : 0,
 				lastDistanse, scope = this,
 				timeid;
+			scope.updating = true;
+			update();
 
 			function onDragMove(e) {
 				var originalEvent = e.originalEvent ? (e.originalEvent.touches ? e.originalEvent.touches[0] : e.originalEvent) : (e.touches ? e.touches[0] : e);
@@ -249,8 +259,7 @@
 				isScroll = false;
 				lastDistanse = originalEvent.pageX - scope.startX;
 				scope.cp += lastDistanse;
-				scope.updating = true;
-				update();
+
 				scope.startX = originalEvent.pageX;
 				scope.startY = originalEvent.pageY;
 				// e.originalEvent.preventDefault();
@@ -261,6 +270,13 @@
 			function update() {
 				if (!scope.updating) return;
 				if (scope._prevCp != scope.cp) {
+					if (!scope.options.loop) {
+						if ((scope.cp < 0 && scope.currentIndex == scope._itemLen - 1) || (scope.cp > 0 && scope.currentIndex == 0)) {
+							scope._prevCp = scope.cp = 0;
+							requestAnimFrame(update);
+							return;
+						}
+					}
 					if (scope._itemLen == 2) {
 						scope._forceSort(scope._prevCp);
 					}
@@ -273,6 +289,8 @@
 			function onDragEnd(e) {
 				$document.off("mousemove touchmove", onDragMove)
 					.off("mouseup mouseleave touchend", onDragEnd);
+				scope.updating = false;
+				// scope.animating = false;
 				if (scope.cp === 0) {
 					return;
 				}
@@ -317,6 +335,9 @@
 			}
 			var index = this.currentIndex - 1;
 			if (index < 0) {
+				if (!this.options.loop) {
+					return;
+				}
 				index = index + this._itemLen;
 			}
 			this.seekTo(index, t, easing, "prev");
@@ -330,6 +351,9 @@
 			}
 			var index = this.currentIndex + 1;
 			if (index > this._itemLen - 1) {
+				if (!this.options.loop) {
+					return;
+				}
 				index = this._itemLen - index;
 			}
 			this.seekTo(index, t, easing, "next");
@@ -389,6 +413,7 @@
 		duration: .6,
 		easing: "linear",
 		touch: true,
+		loop: true,
 		defaultPosition: "relative",
 		start: undefined,
 		ended: undefined,

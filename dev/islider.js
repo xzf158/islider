@@ -121,7 +121,10 @@
 			}
 			if (this.options.indicators) {
 				if (this.options.indicators === $.fn.islider.defaults.indicators) {
-					this._ins = this.$e.children(this.options.indicators);
+					this._ins = this.$e.find(this.options.indicators);
+					this._ins.each(function(i) {
+						$(this).data("index", i);
+					});
 				} else {
 					this._ins = $(this.options.indicators).each(function(i) {
 						$(this).data("index", i);

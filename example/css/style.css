@@ -54,7 +54,7 @@ body,html{
     cursor: pointer;
 }
 
-#pic-islider .isilider-indicators{
+#pic-islider .islider-indicators{
     position: absolute;
     bottom: 20px;
     width: 200px;
@@ -63,7 +63,7 @@ body,html{
     z-index: 9;
 }
 
-#pic-islider .isilider-indicators li{
+#pic-islider .islider-indicators li{
     margin-left: 5px;
     width: 20px;
     height: 20px;
@@ -74,6 +74,6 @@ body,html{
     cursor: pointer;
 }
 
-#pic-islider .isilider-indicators li.active{
+#pic-islider .islider-indicators li.active{
     background: #ff0000;    
 }

@@ -247,14 +247,16 @@
 				boundW = this.options.bound ? liW * 0.25 : 0,
 				lastDistanse, scope = this,
 				timeid;
-			scope.updating = true;
-			update();
 
 			function onDragMove(e) {
 				var originalEvent = e.originalEvent ? (e.originalEvent.touches ? e.originalEvent.touches[0] : e.originalEvent) : (e.touches ? e.touches[0] : e);
 				if (isScroll && Math.abs(originalEvent.pageY - scope.startY) > 5) {
 					onDragEnd();
 					return true;
+				}
+				if (!scope.updating) {
+					scope.updating = true;
+					update();
 				}
 				if (scope.animating) {
 					return false;
@@ -292,7 +294,9 @@
 			function onDragEnd(e) {
 				$document.off("mousemove touchmove", onDragMove)
 					.off("mouseup mouseleave touchend", onDragEnd);
-				scope.updating = false;
+				setTimeout(function() {
+					scope.updating = false;
+				}, 1);
 				// scope.animating = false;
 				if (scope.cp === 0) {
 					return;

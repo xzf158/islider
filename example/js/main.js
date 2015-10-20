@@ -22,7 +22,9 @@ $(function() {
 		easing: "ease-in",
 		touch: true,
 		defaultPosition: "relative",
-		start: undefined,
+		start: function(index, prevIndex) {
+			console.log(index, prevIndex);
+		},
 		ended: undefined,
 		container: ".islider-container",
 		indicators: ".islider-indicators li",
@@ -32,4 +34,8 @@ $(function() {
 		picIslider = this;
 	});
 	// picIslider.seekTo(2, 0);
+	$(".islider-container li").on("click", function() {
+		if (picIslider.updating) return;
+		console.log("============bg click");
+	});
 });

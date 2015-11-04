@@ -1,16 +1,16 @@
 /**
  * @author Terry
  * @date 2013/8/29
- * @modified 2015/10/01
+ * @modified 2015/11/04
  */
-! function($) {
+! function ($) {
 	"use strict";
 
-	var requestAnimFrame = (function() {
+	var requestAnimFrame = (function () {
 		return window.requestAnimationFrame ||
 			window.webkitRequestAnimationFrame ||
 			window.mozRequestAnimationFrame ||
-			function(callback) {
+			function (callback) {
 				window.setTimeout(callback, 16.7);
 			};
 	})();
@@ -27,7 +27,7 @@
 	}
 
 	if (!Array.prototype.indexOf) {
-		Array.prototype.indexOf = function(obj) {
+		Array.prototype.indexOf = function (obj) {
 			for (var i = 0, il = this.length; i < il; i++) {
 				if (this[i] == obj) {
 					return i;
@@ -36,7 +36,7 @@
 		};
 	}
 
-	var ISlider = function(element, options) {
+	var ISlider = function (element, options) {
 		this.$e = $(element);
 		this.options = options;
 		this.currentIndex = this.options.currentIndex;
@@ -54,7 +54,7 @@
 
 	ISlider.prototype = {
 		constructor: ISlider,
-		_initDom: function() {
+		_initDom: function () {
 			if (["relative", "absolute"].indexOf(this.$e.css("position")) === -1) {
 				this.$e.css("position", this.options.defaultPosition);
 			}
@@ -74,7 +74,7 @@
 			});
 
 			this._items = this.container.children(this.options.children);
-			this._items.each(function(i) {
+			this._items.each(function (i) {
 				var $this = $(this);
 				$this.data("index", i);
 				$this.css({
@@ -94,7 +94,7 @@
 			this._sortItem();
 			this._initEvent();
 		},
-		_initEvent: function() {
+		_initEvent: function () {
 			var sliderInst = this,
 				scope = this;
 			if (this.options.prevBtn) {
@@ -103,7 +103,7 @@
 				} else {
 					this._pb = $(this.options.prevBtn);
 				}
-				this._pb.on("click touchstart", function() {
+				this._pb.on("click touchstart", function () {
 					sliderInst.prev();
 					return false;
 				});
@@ -114,7 +114,7 @@
 				} else {
 					this._nb = $(this.options.nextBtn);
 				}
-				this._nb.on("click touchstart", function() {
+				this._nb.on("click touchstart", function () {
 					sliderInst.next();
 					return false;
 				});
@@ -122,15 +122,15 @@
 			if (this.options.indicators) {
 				if (this.options.indicators === $.fn.islider.defaults.indicators) {
 					this._ins = this.$e.find(this.options.indicators);
-					this._ins.each(function(i) {
+					this._ins.each(function (i) {
 						$(this).data("index", i);
 					});
 				} else {
-					this._ins = $(this.options.indicators).each(function(i) {
+					this._ins = $(this.options.indicators).each(function (i) {
 						$(this).data("index", i);
 					});
 				}
-				this._indItems = this._ins.on("click touchstart seek", function(e) {
+				this._indItems = this._ins.on("click touchstart seek", function (e) {
 					if (scope.animating) return;
 					var $this = $(this);
 					if (e) {
@@ -144,13 +144,13 @@
 			}
 			// var hasTouch = ("ontouchstart" in window);
 			if (this.options.touch) {
-				this.$e.on("mousedown touchstart", function(e) {
+				this.$e.on("mousedown touchstart", function (e) {
 					if (e.button == 2) return false;
 					scope._dragStart(e);
 				});
 			}
 		},
-		_sortItem: function() {
+		_sortItem: function () {
 			var _startIndex = this.currentIndex;
 			var css = {};
 			for (var i = 0, il = this._itemLen; i < il; i++) {
@@ -185,7 +185,7 @@
 			//     console.log("============",this._sortItem );
 			// }
 		},
-		_normalSort: function(index) {
+		_normalSort: function (index) {
 			var css = {};
 			for (var i = 0, il = this._itemLen; i < il; i++) {
 				this._items.eq(i).css({
@@ -198,7 +198,7 @@
 		},
 		//when only have two items, need this function
 		//to make sure the items's order correct.
-		_forceSort: function(value) {
+		_forceSort: function (value) {
 			var scope = this;
 			if (value > 0) {
 				if (scope.currentIndex == 0) {
@@ -234,7 +234,7 @@
 				}
 			}
 		},
-		_dragStart: function(e) {
+		_dragStart: function (e) {
 			if (this.animating || this.updating) return false;
 			this._prevCp = 0;
 			this.startX = e.originalEvent ? (e.originalEvent.touches ? e.originalEvent.touches[0].pageX : e.originalEvent.pageX) : (e.touches ? e.touches[0].pageX : e.pageX);
@@ -250,7 +250,7 @@
 
 			function onDragMove(e) {
 				var originalEvent = e.originalEvent ? (e.originalEvent.touches ? e.originalEvent.touches[0] : e.originalEvent) : (e.touches ? e.touches[0] : e);
-				if (isScroll && Math.abs(originalEvent.pageY - scope.startY) > 5) {
+				if (isScroll && Math.abs(originalEvent.pageY - scope.startY) > Math.abs(originalEvent.pageX - scope.startX)) {
 					onDragEnd();
 					return true;
 				}
@@ -294,7 +294,7 @@
 			function onDragEnd(e) {
 				$document.off("mousemove touchmove", onDragMove)
 					.off("mouseup mouseleave touchend", onDragEnd);
-				setTimeout(function() {
+				setTimeout(function () {
 					scope.updating = false;
 				}, 1);
 				// scope.animating = false;
@@ -319,7 +319,7 @@
 				}
 			}
 		},
-		start: function() {
+		start: function () {
 			if (typeof this.options.start == "function") {
 				this.options.start.call(this, this.currentIndex, this.prevIndex, this.direction);
 			}
@@ -328,7 +328,7 @@
 			}
 			this.animating = true;
 		},
-		end: function() {
+		end: function () {
 			this._sortItem();
 			this.animating = false;
 			this.updating = false;
@@ -336,7 +336,7 @@
 				this.options.ended.call(this, this.currentIndex, this.prevIndex, this.direction);
 			}
 		},
-		prev: function(t, easing) {
+		prev: function (t, easing) {
 			if (this._itemLen < 2 || this.animating) {
 				return false;
 			}
@@ -349,7 +349,7 @@
 			}
 			this.seekTo(index, t, easing, "prev");
 		},
-		next: function(t, easing) {
+		next: function (t, easing) {
 			if (this._itemLen < 2 || this.animating) {
 				return false;
 			}
@@ -365,7 +365,7 @@
 			}
 			this.seekTo(index, t, easing, "next");
 		},
-		seekTo: function(index, t, easing, direction) {
+		seekTo: function (index, t, easing, direction) {
 			if (this.animating || index === this.currentIndex || index < 0 || index > this._itemLen - 1) {
 				return;
 			}
@@ -400,8 +400,8 @@
 	 * ========================== */
 	var old = $.fn.islider;
 
-	$.fn.islider = function(option, completeCb) {
-		return this.each(function() {
+	$.fn.islider = function (option, completeCb) {
+		return this.each(function () {
 			var $this = $(this),
 				options = $.extend({}, $.fn.islider.defaults, typeof option == 'object' && option);
 			if (!$this._isliderInst) {
@@ -431,7 +431,7 @@
 		nextBtn: ".next-btn"
 	};
 
-	$.fn.islider.animate = function(leftValue, t, easing) {
+	$.fn.islider.animate = function (leftValue, t, easing) {
 		var scope = this,
 			timeId,
 			duration = (t != undefined ? t : this.options.duration) * 1000;
@@ -444,14 +444,14 @@
 		} else {
 			this.container.animate({
 				left: leftValue
-			}, duration, easing != undefined ? easing : this.options.easing, function() {
+			}, duration, easing != undefined ? easing : this.options.easing, function () {
 				if (timeId > 0) {
 					clearTimeout(timeId);
 					scope.end();
 				}
 			});
 			//fixed when element been hide, the end event will not fill in zepto.js 
-			timeId = setTimeout(function() {
+			timeId = setTimeout(function () {
 				timeId = -1;
 				scope.end();
 			}, duration + 1000);
@@ -459,12 +459,12 @@
 	};
 	/* ISLIDER NO CONFLICT
 	 * ==================== */
-	$.fn.islider.noConflict = function() {
+	$.fn.islider.noConflict = function () {
 		$.fn.islider = old;
 		return this;
 	};
 
 	if (typeof window.define === 'function' && window.define.amd) {
-		window.define('iSlider', [], function() {});
+		window.define('iSlider', [], function () {});
 	}
 }(window.jQuery || window.Zepto);
